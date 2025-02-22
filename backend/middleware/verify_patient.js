@@ -2,8 +2,10 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 function verify_patient(req, res, next) {
+    console.log("verify_patient middleware");
     try {
         const token = req.cookies.jwt;
+        console.log(token);
         if (!token) {
             return res.status(401).json({
                 error: "Unauthorized - No token",

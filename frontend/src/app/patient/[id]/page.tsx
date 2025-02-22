@@ -31,6 +31,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const pid = params.id;
 
   const patient_data = await getPatientDetils({ pid });
+  console.log(patient_data);
   const medical_tests = patient_data.patient_taken_tests;
   const basic_info = patient_data.patient_info;
   const med_hist = patient_data.medical_history;

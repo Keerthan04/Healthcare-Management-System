@@ -1,3 +1,4 @@
+const { connectionString } = require('pg/lib/defaults');
 const {takeCare} = require('../genai/ai');
 const { Pool } = require('pg');
 require('dotenv').config();
@@ -5,17 +6,18 @@ require('dotenv').config();
 let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
 
 const pool = new Pool({
-    host: PGHOST,
-    database: PGDATABASE,
-    username: PGUSER,
-    password: PGPASSWORD,
-    port: 5432,
-    idleTimeoutMillis: 0,
-    connectionTimeoutMillis: 0,
-    ssl: {
-      require: true,
-    },
-  });
+  // host: PGHOST,
+  // database: PGDATABASE,
+  // username: PGUSER,
+  // password: PGPASSWORD,
+  // port: 5432,
+  // idleTimeoutMillis: 0,
+  // connectionTimeoutMillis: 0,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false, // Required for Neon
+  },
+});
 
 async function test (req,res) {
     const client = await pool.connect();
@@ -158,6 +160,7 @@ async function patient_id(email){
 
 //returning the patient details from the database
 async function getpatientData(req, res) {
+    console.log("getpatientData function");
     console.log(req.params.id);
     const client = await pool.connect();
     try {

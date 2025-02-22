@@ -1,18 +1,20 @@
+
+
 async function loginUser(email: string, password: string, role: string){
    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
-            method: 'POST',
-            body: JSON.stringify({ email, password, role }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+     method: "POST",
+     body: JSON.stringify({ email, password, role }),
+     headers: {
+       "Content-Type": "application/json",
+     }, 
+   });
 
         if (!res.ok) {
             throw new Error(res.statusText);
         }
 
-        return res.json() as Promise<{ 
-            id: string
+        return res.json() as Promise<{
+            id: string,
         }>;
 }
 
@@ -20,10 +22,14 @@ async function loginUser(email: string, password: string, role: string){
 
 async function getPatientDetils({ pid }: { pid: string }) {
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/patient/patientdata/${pid}`,{
-            method: 'GET',
-        
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/patient/patientdata/${pid}`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+        console.log(res);
         if (!res.ok) {
             throw new Error(res.statusText);
         }
@@ -52,9 +58,13 @@ async function getPatientDetils({ pid }: { pid: string }) {
 }
 
 async function getPatientAppointments({ pid }: { pid: string }) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/patient/dashboard/${pid}`,{
-        method: 'GET',
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/patient/dashboard/${pid}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
     if (!res.ok) {
         throw new Error(res.statusText);
     }
@@ -81,9 +91,13 @@ async function getPatientAppointments({ pid }: { pid: string }) {
 }
 
 async function getPatientAppointmentsOld({ pid }: { pid: string }) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/patient/old/dashboard/${pid}`,{
-        method: 'GET',
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/patient/old/dashboard/${pid}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
     if (!res.ok) {
         throw new Error(res.statusText);
     }
@@ -110,9 +124,13 @@ async function getPatientAppointmentsOld({ pid }: { pid: string }) {
 }
 
 async function getPrescription({ aid }: { aid: number }) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/patient/prescription/${aid}`,{
-        method: 'GET',
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/patient/prescription/${aid}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
     if (!res.ok) {
         throw new Error(res.statusText);
     }
@@ -127,13 +145,17 @@ async function getPrescription({ aid }: { aid: number }) {
 }
 
 async function getAvailableDoctors({ department, date }: { department: string, date: string }) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/patent/availabledoctors`,{
-        method: 'GET',
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/patent/availabledoctors`,
+      {
+        method: "GET",
         body: JSON.stringify({ department, date }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-    });
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
     if (!res.ok) {
         throw new Error(res.statusText);
     }
@@ -146,13 +168,17 @@ async function getAvailableDoctors({ department, date }: { department: string, d
 }
 
 async function getAvailableSlots({ docID, date }: { docID: string, date: Date }) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/patient/bookappointments`,{
-        method: 'GET',
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/patient/bookappointments`,
+      {
+        method: "GET",
         body: JSON.stringify({ docID, date }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-    });
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
     if (!res.ok) {
         throw new Error(res.statusText);
     }
@@ -163,13 +189,24 @@ async function getAvailableSlots({ docID, date }: { docID: string, date: Date })
 }
 
 async function bookAppointment({ id, slot_no, date, reason_of_appointment, docID }: { id: string, slot_no: string, date: string, reason_of_appointment: string, docID: string }) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/patient/bookappointments/${id}`,{
-        method: 'POST',
-        body: JSON.stringify({ id, slot_no, date, reason_of_appointment, docID }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/patient/bookappointments/${id}`,
+      {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({
+          id,
+          slot_no,
+          date,
+          reason_of_appointment,
+          docID,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
     if (!res.ok) {
         throw new Error(res.statusText);
     }
@@ -179,9 +216,9 @@ async function bookAppointment({ id, slot_no, date, reason_of_appointment, docID
 // doctor part
 async function getDoctorDetils({ did }: { did: string }) {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctor/${did}`,{
-        method: 'GET',
-    
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctor/${did}`, {
+      method: "GET",
+      credentials: "include",
     });
     if (!res.ok) {
         throw new Error(res.statusText);
@@ -204,9 +241,13 @@ async function getDoctorDetils({ did }: { did: string }) {
 }
 
 async function getDoctorAppointments({ did }: { did: string }) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctor/dashboard/${did}`,{
-        method: 'GET',
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/doctor/dashboard/${did}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
     if (!res.ok) {
         throw new Error(res.statusText);
     }
@@ -241,9 +282,13 @@ async function getDoctorAppointments({ did }: { did: string }) {
 }
 
 async function getAppointmentDetails({ pid }: { pid: string }){
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctor/appointment/details/${pid}`,{
-        method: 'GET',
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/doctor/appointment/details/${pid}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
     if (!res.ok) {
         throw new Error(res.statusText);
     }
@@ -277,13 +322,24 @@ async function getAppointmentDetails({ pid }: { pid: string }){
 }
 
 async function prescribeMeds(appointment_id:string, doctor_id: string, patient_id: string, medication_name:string, dosage: string, frequency: string ){
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctor/appointment/prescribe/${patient_id}/${doctor_id}`, {
-             method: 'POST',
-             body: JSON.stringify({ appointment_id, doctor_id, patient_id, medication_name, dosage, frequency }),
-             headers: {
-                 'Content-Type': 'application/json',
-             },
-         });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/doctor/appointment/prescribe/${patient_id}/${doctor_id}`,
+      {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({
+          appointment_id,
+          doctor_id,
+          patient_id,
+          medication_name,
+          dosage,
+          frequency,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
  
          if (!res.ok) {
              throw new Error(res.statusText);
@@ -294,13 +350,17 @@ async function prescribeMeds(appointment_id:string, doctor_id: string, patient_i
  }
 
  async function prescribeTest(doctor_id: string, patient_id: string, test_name:string ){
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctor/appointment/prescribetests`, {
-             method: 'POST',
-             body: JSON.stringify({ doctor_id, patient_id, test_name }),
-             headers: {
-                 'Content-Type': 'application/json',
-             },
-         });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/doctor/appointment/prescribetests`,
+      {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({ doctor_id, patient_id, test_name }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
  
          if (!res.ok) {
              throw new Error(res.statusText);
@@ -311,13 +371,17 @@ async function prescribeMeds(appointment_id:string, doctor_id: string, patient_i
  }
 
  async function docAppointmentStatus(appointment_id: string ,doctor_id: string ,patient_id: string ){
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctor/appointment/status`, {
-             method: 'POST',
-             body: JSON.stringify({ appointment_id, doctor_id, patient_id }),
-             headers: {
-                 'Content-Type': 'application/json',
-             },
-         });
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/doctor/appointment/status`,
+      {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({ appointment_id, doctor_id, patient_id }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
          if (!res.ok) {
             throw new Error(res.statusText);
         }

@@ -27,7 +27,6 @@ async function login(req,res){
                 generateTokenandSetCookie(id, role, res);
                 res.status(200).json({
                     message:"Login Successful",
-                    // token:create_jwt(doctor_id,role),
                     id
                 });
                 return ;
@@ -52,7 +51,6 @@ async function login(req,res){
                 generateTokenandSetCookie(id, role, res);
                 res.status(200).json({
                     message:"Login Successful",
-                    // token:create_jwt(patient_id,role,res),patient_id
                     id
                 });
                 return;
@@ -73,8 +71,9 @@ function generateTokenandSetCookie (id, role, res)  {
 
     res.cookie('jwt', token,{
         maxAge: 2 * 60 * 60 * 1000,
-        httpOnly: true,
+        path: '/',
     });
+
     return token;
 };
 
